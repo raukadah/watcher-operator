@@ -371,3 +371,13 @@ update-watcher-csv:
 	if [ "$(has_webhooks)" != "null" ]; then \
 	    oc patch -n $(OPERATOR_NAMESPACE) $(csv) --type json -p='[{"op": "remove", "path": "/spec/webhookdefinitions"}]'; \
 	fi
+
+.PHONY: watcher
+watcher: ## Deploying watcher operator via olm
+	oc apply -f ci/olm.yaml
+	$(eval csvname=$(shell oc get csv -n openstack-operators -o jsonpath='{range .items[*]}{@.metadata.name}{"\n"}{end}' | grep -E "^watcher-operator\.v"))
+	timeout 30 bash -c 'until [ "$(shell oc get -n openstack-operators csv/$(csvname) -o jsonpath='{.status.phase}')" == "Succeeded" ]; do sleep 5; done'
+
+.PHONY: watcher_cleanup
+watcher_cleanup: ## Cleaning watcher operator via olm
+	oc delete -f ci/olm.yaml
