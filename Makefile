@@ -371,3 +371,33 @@ update-watcher-csv:
 	if [ "$(has_webhooks)" != "null" ]; then \
 	    oc patch -n $(OPERATOR_NAMESPACE) $(csv) --type json -p='[{"op": "remove", "path": "/spec/webhookdefinitions"}]'; \
 	fi
+
+.PHONY: install_yaml_clone
+install_yaml_clone: ## Clone install_yamls repo in home directory
+	if [ -d  "${HOME}/install_yamls" ]; then \
+                echo "install_yamls exists"; \
+        else \
+		git clone https://github.com/openstack-k8s-operators/ci-framework ${HOME}/install_yamls
+	fi
+
+.PHONY: watcher
+watcher: install_yaml_clone
+watcher: ## Install watcher-operator controller
+	cd ${HOME}/install_yamls && make watcher
+
+.PHONY: watcher_cleanup
+watcher: install_yaml_clone
+watcher: ## Remove watcher-operator controller
+	cd ${HOME}/install_yamls && make watcher_cleanup
+
+.PHONY: watcher_deploy
+watcher_deploy: install_yaml_clone
+watcher_deploy: export WATCHER_REPO=$(dirname $(pwd))
+watcher_deploy: export WATCHER_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+watcher_deploy: ## Deploy watcher service
+	cd ${HOME}/install_yamls && make watcher_deploy
+
+.PHONY: watcher_deploy_cleanup
+watcher_deploy: install_yaml_clone
+watcher_deploy: ## Cleanup watcher service
+	cd ${HOME}/install_yamls && make watcher_deploy_cleanup
