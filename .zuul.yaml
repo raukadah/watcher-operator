@@ -7,10 +7,17 @@
         - noop
         - watcher-operator-doc-preview
         - openstack-meta-content-provider:
+            override-checkout: main
             vars:
               cifmw_operator_build_meta_build: false
-        - watcher-operator-validation
-        - watcher-operator-kuttl
+              cifmw_bop_openstack_release: master
+              cifmw_bop_dlrn_baseurl: "https://trunk.rdoproject.org/centos9-master"
+              cifmw_repo_setup_branch: master
+        - watcher-operator-validation: &job_vars
+            override-checkout: main
+            vars:
+              cifmw_repo_setup_branch: master
+        - watcher-operator-kuttl: *job_vars
 
 - job:
     name: watcher-operator-base
