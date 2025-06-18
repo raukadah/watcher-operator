@@ -393,10 +393,12 @@ watcher: ## Install watcher operator via olm
 	timeout 300s bash -c "while ! (oc get csv -n  openshift-operators -l  operators.coreos.com/cluster-observability-operator.openshift-operators -o jsonpath='{.items[*].status.phase}' | grep Succeeded); do sleep 10; done"
 	timeout 300s bash -c "while ! (oc get csv -n openstack-operators -l operators.coreos.com/watcher-operator.openstack-operators -o jsonpath='{.items[*].status.phase}' | grep Succeeded); do sleep 1; done"
 
+OPENSTACK_NAMESPACE ?= openstack
+
 .PHONY: watcher_deploy
 watcher_deploy: ## Deploy watcher service
-	oc apply -f ${WATCHER_SAMPLE_CR_PATH}
-	oc wait watcher watcher --for condition=Ready --timeout=600s
+	oc apply -f ${WATCHER_SAMPLE_CR_PATH} -n ${OPENSTACK_NAMESPACE}
+	oc wait watcher watcher --for condition=Ready --timeout=600s -n ${OPENSTACK_NAMESPACE}
 
 .PHONY: watcher_deploy_cleanup
 watcher_deploy_cleanup: ## Undeploy watcher service
