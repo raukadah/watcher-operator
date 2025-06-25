@@ -10,7 +10,10 @@
       jobs:
         - noop
         - watcher-operator-doc-preview
-        - watcher-operator-kuttl
+        - watcher-operator-kuttl:
+            required-projects:
+              - name: openstack-k8s-operators/ci-framework
+                override-checkout: main
 
 - job:
     name: watcher-operator-base
@@ -271,21 +274,6 @@
 
 ##########################################################
 #                                                        #
-#               Zuul Pragma to alter Zuul Config         #
-#                                                        #
-##########################################################
-
-  # Note(Chandan Kumar): Keep Zuul Pragma config only in
-  # main branch. Whenever we create FR* branch, We should
-  # delete Pragma config manually from FR* branch.
-- pragma:
-    implied-branch-matchers: True
-    implied-branches:
-      - master
-      - main
-
-##########################################################
-#                                                        #
 #               Project Template                         #
 #                                                        #
 ##########################################################
@@ -294,16 +282,31 @@
     name: opendev-master-watcher-operator-pipeline
     github-check:
       jobs:
-        - openstack-meta-content-provider-master
-        - watcher-operator-validation-master
+        - openstack-meta-content-provider-master:
+            required-projects:
+              - name: openstack-k8s-operators/ci-framework
+                override-checkout: main
+        - watcher-operator-validation-master:
+            required-projects:
+              - name: openstack-k8s-operators/ci-framework
+                override-checkout: main
 
 - project-template:
     name: opendev-epoxy-watcher-operator-pipeline
     github-check:
       jobs:
-        - openstack-meta-content-provider-epoxy
-        - watcher-operator-validation-epoxy
-        - watcher-operator-validation-epoxy-ocp4-16
+        - openstack-meta-content-provider-epoxy:
+            required-projects:
+              - name: openstack-k8s-operators/ci-framework
+                override-checkout: main
+        - watcher-operator-validation-epoxy:
+            required-projects:
+              - name: openstack-k8s-operators/ci-framework
+                override-checkout: main
+        - watcher-operator-validation-epoxy-ocp4-16:
+            required-projects:
+              - name: openstack-k8s-operators/ci-framework
+                override-checkout: main
 
 - project-template:
     name: opendev-watcher-edpm-pipeline
