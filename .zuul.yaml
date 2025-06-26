@@ -75,6 +75,9 @@
       inheriting from watcher-operator-base, like the one running in the
       master pipeline.
     vars:
+      cifmw_edpm_telemetry_enabled_exporters:
+        - podman_exporter
+        - openstack_network_exporter
       # Donot use openstack services containers from meta content provider master
       # job.
       cifmw_update_containers_openstack: false
