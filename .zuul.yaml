@@ -218,6 +218,7 @@
           src: "{{ ansible_user_dir }}/src/github.com/openstack-k8s-operators/watcher-operator"
         - name: openstack-operator
           src: "{{ ansible_user_dir }}/src/github.com/openstack-k8s-operators/openstack-operator"
+          image_base: watcher
 - job:
     name: watcher-operator-validation-master
     parent: watcher-operator-validation-base
@@ -313,6 +314,7 @@
                   src: "{{ ansible_user_dir }}/src/github.com/openstack-k8s-operators/watcher-operator"
                 - name: openstack-operator
                   src: "{{ ansible_user_dir }}/src/github.com/openstack-k8s-operators/openstack-operator"
+                  image_base: watcher
         - watcher-operator-validation-master:
             branches: master
             override-checkout: main
